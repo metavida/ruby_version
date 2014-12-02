@@ -1,5 +1,6 @@
 require 'date'
 require 'time'
+require 'yaml'
 
 module RubyVersion
   VERSION = '1.0.1'
@@ -97,6 +98,15 @@ module RubyVersion
     end
 
     alias teeny tiny
+
+    def gemset
+      if File.exists?('.ruby-gemset')
+        File.read('.ruby-gemset').strip
+      else
+        rvm_info = YAML.load(`rvm info`).values.first rescue {}
+        rvm_info['environment'] && rvm_info['environment']['gemset']
+      end
+    end
 
     def patchlevel
       RUBY_PATCHLEVEL
